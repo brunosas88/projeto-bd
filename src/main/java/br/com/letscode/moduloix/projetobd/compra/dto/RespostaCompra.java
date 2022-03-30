@@ -1,12 +1,13 @@
 package br.com.letscode.moduloix.projetobd.compra.dto;
 
 import br.com.letscode.moduloix.projetobd.compra.model.Compra;
-import br.com.letscode.moduloix.projetobd.produto.dto.ProdutoCompradoDTO;
+import br.com.letscode.moduloix.projetobd.compraproduto.dto.CompraProdutoDTO;
 import lombok.*;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -18,7 +19,7 @@ public class RespostaCompra {
     private String dataCompra;
     private String cpfCliente;
     private Float valorTotal;
-    private List<ProdutoCompradoDTO> produtos = new ArrayList<>();
+    private List<CompraProdutoDTO> pedidos = new ArrayList<>();
 
     public static RespostaCompra convertCompraToRespostaCompra(Compra compra) {
         RespostaCompra respostaCompra = new RespostaCompra();
@@ -26,7 +27,7 @@ public class RespostaCompra {
         respostaCompra.setDataCompra(compra.getDataCompra().format(formato));
         respostaCompra.setCpfCliente(compra.getCpfCliente());
         respostaCompra.setValorTotal(compra.getValorTotal());
-        respostaCompra.setProdutos(ProdutoCompradoDTO.converterListaProdutoParaListaProdutoCompradoDTO(compra));
+        respostaCompra.setPedidos(compra.getPedidos().stream().map(CompraProdutoDTO::converterCompraProdutoParaDTO).collect(Collectors.toList()));
         return respostaCompra;
     }
 

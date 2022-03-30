@@ -1,12 +1,9 @@
 package br.com.letscode.moduloix.projetobd.produto.model;
 
-import br.com.letscode.moduloix.projetobd.compraproduto.model.CompraProduto;
 import br.com.letscode.moduloix.projetobd.produto.dto.ProdutoDTO;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -17,7 +14,7 @@ import java.util.List;
 public class Produto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer idProduto;
 
     @Column(name = "codigo", unique = true)
     private String codigo;

@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class CompraProduto {
 
     @EmbeddedId
-    private CompraProdutoChave id;
+    private CompraProdutoChave id = new CompraProdutoChave();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("idCompra")
@@ -29,6 +29,9 @@ public class CompraProduto {
     @JoinColumn(name = "id_produto")
     private Produto produto;
 
+    @Column
     private Integer qtd;
+
+
 
 }

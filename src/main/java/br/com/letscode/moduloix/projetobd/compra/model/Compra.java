@@ -5,6 +5,7 @@ import br.com.letscode.moduloix.projetobd.produto.model.Produto;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +16,10 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @Entity(name = "compra")
-public class Compra {
+public class Compra{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer idCompra;
 
     @Column(name = "data_compra")
     private LocalDateTime dataCompra;
@@ -29,19 +30,8 @@ public class Compra {
     @Column(name = "valot_total", columnDefinition = "valot_total >= 0")
     private Float valorTotal;
 
-    @ManyToMany
-    @JoinTable(name = "compra_produto",
-            joinColumns = {@JoinColumn(name = "id_compra")},
-            inverseJoinColumns = {@JoinColumn(name = "id_produto")}
-    )
-    private List<Produto> produtos = new ArrayList<>();
-
     @OneToMany(mappedBy = "compra")
     private List<CompraProduto> pedidos = new ArrayList<>();
-
-    public void adicionarProdutoLista (Produto produto) {
-        this.produtos.add(produto);
-    }
 
     public void adicionarPedidoLista (CompraProduto pedido) {
         this.pedidos.add(pedido);

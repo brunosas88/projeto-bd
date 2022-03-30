@@ -1,5 +1,7 @@
 package br.com.letscode.moduloix.projetobd.compraproduto.dto;
 
+import br.com.letscode.moduloix.projetobd.compraproduto.model.CompraProduto;
+import br.com.letscode.moduloix.projetobd.produto.model.Produto;
 import lombok.*;
 
 @Getter
@@ -9,7 +11,11 @@ import lombok.*;
 @AllArgsConstructor
 public class CompraProdutoDTO {
 
-    private String codigoProduto;
-    private Integer qtdProduto;
+    private String codigo;
+    private Float preco;
+    private Integer qtd;
 
+    public static CompraProdutoDTO converterCompraProdutoParaDTO (CompraProduto compraProduto) {
+        return new CompraProdutoDTO(compraProduto.getProduto().getCodigo(), compraProduto.getProduto().getPreco(), compraProduto.getQtd());
+    }
 }
