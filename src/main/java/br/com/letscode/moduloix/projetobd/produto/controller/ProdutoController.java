@@ -1,12 +1,17 @@
 package br.com.letscode.moduloix.projetobd.produto.controller;
 
 import br.com.letscode.moduloix.projetobd.produto.dto.ProdutoDTO;
+import br.com.letscode.moduloix.projetobd.produto.model.Produto;
 import br.com.letscode.moduloix.projetobd.produto.service.ProdutoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+
+import com.querydsl.core.types.Predicate;
 
 @RestController
 @RequestMapping("/produto")
@@ -21,7 +26,7 @@ public class ProdutoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProdutoDTO>> listarProdutos () {
-        return ResponseEntity.ok(produtoService.listarProdutos());
+    public ResponseEntity<Page<ProdutoDTO>> listarProdutos (@QuerydslPredicate(root = Produto.class) Predicate predicate, Pageable pageable) {
+        return ResponseEntity.ok(produtoService.listarProdutos(predicate, pageable));
     }
 }

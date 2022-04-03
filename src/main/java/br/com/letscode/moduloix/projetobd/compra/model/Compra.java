@@ -1,11 +1,10 @@
 package br.com.letscode.moduloix.projetobd.compra.model;
 
 import br.com.letscode.moduloix.projetobd.compraproduto.model.CompraProduto;
-import br.com.letscode.moduloix.projetobd.produto.model.Produto;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
