@@ -1,7 +1,7 @@
 package br.com.letscode.moduloix.projetobd.compra.controller;
 
-import br.com.letscode.moduloix.projetobd.compra.dto.RequisicaoCompra;
-import br.com.letscode.moduloix.projetobd.compra.dto.RespostaCompra;
+import br.com.letscode.moduloix.projetobd.compra.dto.RequisicaoCompraDTO;
+import br.com.letscode.moduloix.projetobd.compra.dto.RespostaCompraDTO;
 import br.com.letscode.moduloix.projetobd.compra.model.Compra;
 import br.com.letscode.moduloix.projetobd.compra.service.CompraService;
 import com.querydsl.core.types.Predicate;
@@ -21,11 +21,11 @@ public class CompraController {
     private final CompraService compraService;
 
     @PostMapping
-    public ResponseEntity<RespostaCompra> cadastrarCompra (@RequestBody RequisicaoCompra requisicaoCompra) {
+    public ResponseEntity<RespostaCompraDTO> cadastrarCompra (@RequestBody RequisicaoCompraDTO requisicaoCompra) {
         return ResponseEntity.ok(compraService.cadastraCompra(requisicaoCompra));
     }
     @GetMapping
-    public ResponseEntity<Page<RespostaCompra>> listarCompras (@QuerydslPredicate(root = Compra.class) Predicate predicate, Pageable pageable) {
+    public ResponseEntity<Page<RespostaCompraDTO>> listarCompras (@QuerydslPredicate(root = Compra.class) Predicate predicate, Pageable pageable) {
         return ResponseEntity.ok(compraService.listaCompras(predicate, pageable));
 
     }

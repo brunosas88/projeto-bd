@@ -1,4 +1,4 @@
-package br.com.letscode.moduloix.projetobd.compra.model;
+package br.com.letscode.moduloix.projetobd.compra.dto;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompraPedido {
+public class CompraPedidoDTO {
 
     private String codigoProduto;
     private Integer qtdProduto;

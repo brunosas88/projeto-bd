@@ -1,13 +1,16 @@
 package br.com.letscode.moduloix.projetobd.compra.service;
 
-import br.com.letscode.moduloix.projetobd.compra.dto.RequisicaoCompra;
-import br.com.letscode.moduloix.projetobd.compra.dto.RespostaCompra;
+import br.com.letscode.moduloix.projetobd.compra.dto.RequisicaoCompraDTO;
+import br.com.letscode.moduloix.projetobd.compra.dto.RespostaCompraDTO;
 import br.com.letscode.moduloix.projetobd.compra.model.Compra;
+import br.com.letscode.moduloix.projetobd.compra.dto.CompraPedidoDTO;
 import br.com.letscode.moduloix.projetobd.compra.repository.CompraRepository;
 import br.com.letscode.moduloix.projetobd.compraproduto.model.CompraProduto;
 import br.com.letscode.moduloix.projetobd.compraproduto.repository.CompraProdutoRepository;
+import br.com.letscode.moduloix.projetobd.compraproduto.service.CompraProdutoService;
 import br.com.letscode.moduloix.projetobd.produto.model.Produto;
 import br.com.letscode.moduloix.projetobd.produto.model.QProduto;
+import br.com.letscode.moduloix.projetobd.produto.service.ProdutoService;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import lombok.RequiredArgsConstructor;
@@ -18,43 +21,51 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CompraService {
 
     private final CompraRepository compraRepository;
-    private final CompraProdutoRepository compraProdutoRepository;
-    private final EntityManager entityManager;
+    private final CompraProdutoService compraProdutoService;
+    private final ProdutoService produtoService;
 
-    public RespostaCompra cadastraCompra(RequisicaoCompra requisicaoCompra) {
+    public RespostaCompraDTO cadastraCompra(RequisicaoCompraDTO requisicaoCompraDTO) {
         Compra novaCompra = new Compra();
         novaCompra.setDataCompra(LocalDateTime.now());
-        novaCompra.setCpfCliente(requisicaoCompra.getCpf());
+        novaCompra.setCpfCliente(requisicaoCompraDTO.getCpf());
         novaCompra.setValorTotal(0F);
-        requisicaoCompra.getPedido().forEach( pedido -> {
-            Produto produto = buscaProdutoPorCodigo(pedido.getCodigoProduto());
-            novaCompra.setValorTotal( (produto.getPreco() * pedido.getQtdProduto()) + novaCompra.getValorTotal() );
-            CompraProduto novoPedido = new CompraProduto();
-            novoPedido.setProduto(produto);
-            novoPedido.setQtd(pedido.getQtdProduto());
-            novoPedido.setCompra(novaCompra);
-            novaCompra.adicionarPedidoLista(novoPedido);
-        });
-        Compra finalNovaCompra = compraRepository.save(novaCompra);
-        compraProdutoRepository.saveAll(finalNovaCompra.getPedidos());
-
-        return RespostaCompra.convertCompraToRespostaCompra(finalNovaCompra);
+        novaCompra.setValorTotal(calcularValorTotalPedidos(requisicaoCompraDTO.getPedido()));
+        novaCompra.getPedidos().addAll( requisicaoCompraDTO.getPedido()
+                .stream()
+                .map(novoPedido -> {
+                    try {
+                        return compraProdutoService.salvarPedido(novoPedido, novaCompra);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                })
+                .collect(Collectors.toList())
+        );
+        Compra novaCompraComIdRegistrado = compraRepository.save(novaCompra);
+        compraProdutoService.salvarCompraProdutoChave(novaCompraComIdRegistrado.getPedidos());
+        return RespostaCompraDTO.convertCompraToRespostaCompra(novaCompraComIdRegistrado);
     }
 
-    public Page<RespostaCompra> listaCompras (Predicate predicate, Pageable pageable) {
-        return compraRepository.findAll(predicate, pageable).map(RespostaCompra::convertCompraToRespostaCompra);
+    public Page<RespostaCompraDTO> listaCompras (Predicate predicate, Pageable pageable) {
+        return compraRepository.findAll(predicate, pageable).map(RespostaCompraDTO::convertCompraToRespostaCompra);
     }
 
-    private Produto buscaProdutoPorCodigo(String codigo) {
-        JPAQuery<?> query = new JPAQuery<Void>(entityManager);
-        QProduto produto = QProduto.produto;
-        return query.select(produto).from(produto).where(produto.codigo.eq(codigo)).fetchOne();
+    private Float calcularValorTotalPedidos (List<CompraPedidoDTO> pedidosDTO) {
+        Float valorTotal = 0F;
+        for (CompraPedidoDTO pedidoDTO : pedidosDTO) {
+            Produto produto = produtoService.buscarProdutoPorCodigo(pedidoDTO.getCodigoProduto());
+            valorTotal = valorTotal + ( produto.getPreco() * pedidoDTO.getQtdProduto() );
+        }
+        return valorTotal;
     }
 
 

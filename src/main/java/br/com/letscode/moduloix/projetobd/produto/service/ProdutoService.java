@@ -17,7 +17,6 @@ import javax.persistence.EntityManager;
 public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
-    private final EntityManager entityManager;
 
     public ProdutoDTO cadastrarProduto (ProdutoDTO produtoDTO) {
         return ProdutoDTO.convertProdutoToDTO(produtoRepository.save(Produto.convertProdutoDTO(produtoDTO)));
@@ -25,6 +24,14 @@ public class ProdutoService {
 
     public Page<ProdutoDTO> listarProdutos(Predicate predicate, Pageable pageable) {
         return produtoRepository.findAll(predicate, pageable).map(ProdutoDTO::convertProdutoToDTO);
+    }
+
+    public Produto buscarProdutoPorCodigo (String codigo) {
+        return produtoRepository.findProdutoByCodigo(codigo);
+    }
+
+    public Produto atualizarProduto (Produto produto) {
+        return produtoRepository.save(produto);
     }
 
 }

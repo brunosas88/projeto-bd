@@ -1,6 +1,5 @@
 package br.com.letscode.moduloix.projetobd.compra.dto;
 
-import br.com.letscode.moduloix.projetobd.compra.model.CompraPedido;
 import lombok.*;
 
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequisicaoCompra {
+public class RequisicaoCompraDTO {
     private String cpf;
-    private List<CompraPedido> pedido;
+    private List<CompraPedidoDTO> pedido;
 }

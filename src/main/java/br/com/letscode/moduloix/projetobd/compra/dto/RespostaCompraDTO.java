@@ -14,21 +14,21 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class RespostaCompra {
+public class RespostaCompraDTO {
 
     private String dataCompra;
     private String cpfCliente;
     private Float valorTotal;
     private List<CompraProdutoDTO> pedidos = new ArrayList<>();
 
-    public static RespostaCompra convertCompraToRespostaCompra(Compra compra) {
-        RespostaCompra respostaCompra = new RespostaCompra();
+    public static RespostaCompraDTO convertCompraToRespostaCompra(Compra compra) {
+        RespostaCompraDTO respostaCompraDTO = new RespostaCompraDTO();
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        respostaCompra.setDataCompra(compra.getDataCompra().format(formato));
-        respostaCompra.setCpfCliente(compra.getCpfCliente());
-        respostaCompra.setValorTotal(compra.getValorTotal());
-        respostaCompra.setPedidos(compra.getPedidos().stream().map(CompraProdutoDTO::converterCompraProdutoParaDTO).collect(Collectors.toList()));
-        return respostaCompra;
+        respostaCompraDTO.setDataCompra(compra.getDataCompra().format(formato));
+        respostaCompraDTO.setCpfCliente(compra.getCpfCliente());
+        respostaCompraDTO.setValorTotal(compra.getValorTotal());
+        respostaCompraDTO.setPedidos(compra.getPedidos().stream().map(CompraProdutoDTO::converterCompraProdutoParaDTO).collect(Collectors.toList()));
+        return respostaCompraDTO;
     }
 
 
