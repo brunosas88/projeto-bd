@@ -36,18 +36,12 @@ public class CompraService {
         Compra novaCompra = new Compra();
         novaCompra.setDataCompra(LocalDateTime.now());
         novaCompra.setCpfCliente(requisicaoCompraDTO.getCpf());
-        novaCompra.setValorTotal(0F);
         novaCompra.setValorTotal(calcularValorTotalPedidos(requisicaoCompraDTO.getPedido()));
         novaCompra.getPedidos().addAll( requisicaoCompraDTO.getPedido()
                 .stream()
-                .map(novoPedido -> {
-                    try {
-                        return compraProdutoService.salvarPedido(novoPedido, novaCompra);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                })
+                .map(novoPedido ->
+                    compraProdutoService.salvarPedido(novoPedido, novaCompra)
+                )
                 .collect(Collectors.toList())
         );
         Compra novaCompraComIdRegistrado = compraRepository.save(novaCompra);

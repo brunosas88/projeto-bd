@@ -22,7 +22,7 @@ public class CompraProdutoService {
         compraProdutoRepository.saveAll(pedidos);
     }
 
-    public CompraProduto salvarPedido (CompraPedidoDTO pedidoDTO, Compra novaCompra) throws Exception {
+    public CompraProduto salvarPedido (CompraPedidoDTO pedidoDTO, Compra novaCompra) {
         CompraProduto novoPedido = new CompraProduto();
         Produto produtoPedido = controleEstoqueVenda(pedidoDTO.getCodigoProduto(), pedidoDTO.getQtdProduto());
         novoPedido.setProduto(produtoPedido);
@@ -31,15 +31,10 @@ public class CompraProdutoService {
         return novoPedido;
     }
 
-    public Produto controleEstoqueVenda (String codigo, Integer qtdRetirada) throws Exception {
+    public Produto controleEstoqueVenda (String codigo, Integer qtdRetirada) {
         Produto produtoEstoque = produtoService.buscarProdutoPorCodigo(codigo);
         produtoEstoque.setQtdDisponivel(produtoEstoque.getQtdDisponivel() - qtdRetirada);
+        return produtoService.atualizarProduto(produtoEstoque);}
 
-        if (produtoEstoque.getQtdDisponivel() < 0) {
-            throw new Exception("Quantidade além da disponível");
-        }
-        else {
-            return produtoService.atualizarProduto(produtoEstoque);}
-    }
 
 }
