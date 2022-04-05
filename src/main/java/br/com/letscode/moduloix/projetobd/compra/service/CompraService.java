@@ -8,7 +8,6 @@ import br.com.letscode.moduloix.projetobd.compraproduto.model.CompraProduto;
 import br.com.letscode.moduloix.projetobd.compraproduto.repository.CompraProdutoRepository;
 import br.com.letscode.moduloix.projetobd.produto.model.Produto;
 import br.com.letscode.moduloix.projetobd.produto.model.QProduto;
-import br.com.letscode.moduloix.projetobd.produto.service.ProdutoService;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,6 @@ import java.time.LocalDateTime;
 public class CompraService {
 
     private final CompraRepository compraRepository;
-    private final ProdutoService produtoService;
     private final CompraProdutoRepository compraProdutoRepository;
     private final EntityManager entityManager;
 
