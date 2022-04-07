@@ -63,5 +63,7 @@ public class CompraService {
     }
 
 
-
+    public Page<RespostaCompraDTO> listarComprasCPF(String cpf, Pageable pageable) {
+        return compraRepository.findByCpfCliente(cpf, pageable).map(RespostaCompraDTO::convertCompraToRespostaCompra);
+    }
 }

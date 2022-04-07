@@ -14,18 +14,18 @@ import org.springframework.web.bind.annotation.*;
 import com.querydsl.core.types.Predicate;
 
 @RestController
-@RequestMapping("/produto")
+@RequestMapping("/mercado/produtos")
 @RequiredArgsConstructor
 public class ProdutoController {
 
     private final ProdutoService produtoService;
 
-    @PostMapping
+    @PostMapping("/admin/cadastro-produtos")
     public ResponseEntity<ProdutoDTO> cadastrarProduto (@RequestBody ProdutoDTO produtoDTO) {
         return ResponseEntity.ok(produtoService.cadastrarProduto(produtoDTO));
     }
 
-    @GetMapping
+    @GetMapping("/listar")
     public ResponseEntity<Page<ProdutoDTO>> listarProdutos (@QuerydslPredicate(root = Produto.class) Predicate predicate, Pageable pageable) {
         return ResponseEntity.ok(produtoService.listarProdutos(predicate, pageable));
     }

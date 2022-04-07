@@ -14,20 +14,25 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/compra")
+@RequestMapping("/mercado/compras")
 @RequiredArgsConstructor
 public class CompraController {
 
     private final CompraService compraService;
 
-    @PostMapping
+    @PostMapping("/compra-produto")
     public ResponseEntity<RespostaCompraDTO> cadastrarCompra (@RequestBody RequisicaoCompraDTO requisicaoCompra) {
         return ResponseEntity.ok(compraService.cadastraCompra(requisicaoCompra));
     }
-    @GetMapping
+
+    @GetMapping("/admin/historico-compras")
     public ResponseEntity<Page<RespostaCompraDTO>> listarCompras (@QuerydslPredicate(root = Compra.class) Predicate predicate, Pageable pageable) {
         return ResponseEntity.ok(compraService.listaCompras(predicate, pageable));
+    }
 
+    @GetMapping("/minhas-compras")
+    public ResponseEntity<Page<RespostaCompraDTO>> listarComprasCPF (@RequestParam String cpf, Pageable pageable){
+        return ResponseEntity.ok(compraService.listarComprasCPF(cpf, pageable));
     }
 
 }
