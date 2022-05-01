@@ -1,9 +1,15 @@
 package br.com.letscode.moduloix.projetobd.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -15,22 +21,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/mercado/compras/compra-produto", "/mercado/produtos/listar").permitAll()
+                .antMatchers("/mercado/compras/compra-produto", "/mercado/produtos/listar", "/user").permitAll()
                 .antMatchers("/mercado/compras/minhas-compras").hasRole("CLIENT")
                 .antMatchers("/mercado/compras/admin/**", "/mercado/produtos/admin/**").hasRole("ADMIN");
 
     }
 
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .inMemoryAuthentication()
-                .withUser("client")
-                .password("{noop}client")
-                .roles("CLIENT")
-                .and()
-                .withUser("admin")
-                .password("{noop}admin")
-                .roles("ADMIN");
+    @Bean
+    public UserDetailsManager users(DataSource dataSource) {
+        JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
+        return users;
+    }
+
+    @Bean
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }

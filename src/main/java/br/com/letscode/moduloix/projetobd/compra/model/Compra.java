@@ -1,6 +1,7 @@
 package br.com.letscode.moduloix.projetobd.compra.model;
 
 import br.com.letscode.moduloix.projetobd.compraproduto.model.CompraProduto;
+import br.com.letscode.moduloix.projetobd.user.model.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,6 +32,9 @@ public class Compra{
 
     @OneToMany(mappedBy = "compra")
     private List<CompraProduto> pedidos = new ArrayList<>();
+
+    @OneToOne(mappedBy = "userCompra")
+    private User user;
 
     public void adicionarPedidoLista (CompraProduto pedido) {
         this.pedidos.add(pedido);
